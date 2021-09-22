@@ -1,3 +1,8 @@
+import React, { useState } from "react";
+import { DragDropContext } from "react-beautiful-dnd";
+import Column from "./components/Column";
+import { status } from "./constants/mock";
+
 const onDragEnd = (result, columns, setColumns) => {
   if (!result.destination) return;
   const { source, destination } = result;
@@ -34,3 +39,40 @@ const onDragEnd = (result, columns, setColumns) => {
     });
   }
 };
+
+function App() {
+  const [columns, setColumns] = useState(status);
+
+  return (
+    <div style={{ display: "flex", justifyContent: "center", height: "100%" }}>
+      <DragDropContext
+        onDragEnd={(result) => onDragEnd(result, columns, setColumns)}
+      >
+        {Object.entries(columns).map(([columnId, column], index) => {
+          return (
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center"
+              }}
+              key={columnId}
+            >
+              <h2>{column.name}</h2>
+              <div style={{ margin: 8 }}>
+                <Column
+                  droppableId={columnId}
+                  key={columnId}
+                  index={index}
+                  column={column}
+                />
+              </div>
+            </div>
+          );
+        })}
+      </DragDropContext>
+    </div>
+  );
+}
+
+export default App;
