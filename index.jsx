@@ -1,39 +1,46 @@
 import React, { memo } from "react";
 import PropTypes from "prop-types";
-import { Droppable } from "react-beautiful-dnd";
-import TaskCard from "./TaskCard";
+import { Draggable } from "react-beautiful-dnd";
+import "../styles.css";
 
-const Column = ({ droppableId, column }) => {
+function TaskCard({ item, index }) {
   return (
-    <Droppable droppableId={droppableId} key={droppableId}>
+    <Draggable key={item.id} draggableId={item.id} index={index}>
       {(provided, snapshot) => {
         return (
           <div
-            {...provided.droppableProps}
             ref={provided.innerRef}
+            {...provided.draggableProps}
+            {...provided.dragHandleProps}
             style={{
-              background: snapshot.isDraggingOver ? "lightblue" : column.color,
-              padding: 4,
-              width: 250,
-              minHeight: 500,
-              border: "2px dashed #ccc",
-              borderRadius: "4px"
+              userSelect: "none",
+              padding: 16,
+              margin: "0 0 8px 0",
+              minHeight: "50px",
+              backgroundColor: snapshot.isDragging ? "#263B4A" : "#456C86",
+              color: "white",
+              borderRadius: "4px",
+              ...provided.draggableProps.style
             }}
           >
-            {column?.items?.map((item, index) => {
-              return <TaskCard key={item.id} item={item} index={index} />;
-            })}
-            {provided.placeholder}
+            <div className="conten-card">
+              <img
+                src="https://react-beautiful-dnd.netlify.app/static/media/bmo-min.9c65ecdf.png"
+                alt="logo"
+                className="logo"
+              />
+              {item.content}
+            </div>
           </div>
         );
       }}
-    </Droppable>
+    </Draggable>
   );
+}
+
+TaskCard.propTypes = {
+  index: PropTypes.number,
+  item: PropTypes.object
 };
 
-Column.propTypes = {
-  column: PropTypes.object,
-  droppableId: PropTypes.string
-};
-
-export default memo(Column);
+export default memo(TaskCard);
